@@ -72,17 +72,87 @@ function GameController(
     console.log(`${getActivePlayer().name}'s turn.`)
   }
 
-  const playRound = (column, row) => {
-    console.log(`Dropping ${getActivePlayer}'s token into column ${column}, row ${row}...`)
-    isValidMove = board.placeToken(column, row, getActivePlayer().token) ? true : false ;
-    
-    if (isValidMove) {
-      switchPlayerTurn();
-    }
-    printNewRound();
+  const winner = (board) => {
+    let currentBoard = board;
+    let winningPatterns = [
+      [
+        [1,0,0],
+        [1,0,0],
+        [1,0,0]
+      ],
+      [
+        [1,0,0],
+        [0,1,0],
+        [0,0,1]
+      ],
+      [
+        [0,0,0],
+        [0,0,0],
+        [1,1,1]
+      ],
+      [
+        [0,0,1],
+        [0,1,0],
+        [1,0,0]
+      ],
+      [
+        [1,1,1],
+        [0,0,0],
+        [0,0,0]
+      ],
+      [
+        [0,0,0],
+        [1,1,1],
+        [0,0,0]
+      ],
+      [
+        [0,1,0],
+        [0,1,0],
+        [0,1,0]
+      ],
+      [
+        [0,0,1],
+        [0,0,1],
+        [0,0,1]
+      ]
+    ];
+
+    let player1BoardState = JSON.stringify(currentBoard.map((row) => 
+      row.map((cell) => cell === "x" ? 1 : 0)
+    ));
+    let player2BoardState = JSON.stringify(currentBoard.map((row) => 
+      row.map((cell) => cell === "o" ? 1 : 0)
+    ));
+
+    for (let i = 0; i < winningPatterns.length; i++) {
+      let winningPatternToCheckStringified = JSON.stringify(winningPatterns[i]);
+
+      if (player1BoardState === winningPatternToCheckStringified) {
+        let winner = players[0].name;
+        console.log(`The winner is ${winner}!`);
+        return winner;
+        
+      } else if (player2BoardState === winningPatternToCheckStringified) {
+        let winner = players[1].name;
+        console.log(`The winner is ${winner}!`);
+        return winner;
+      }
+    };
+    // return winner;
   };
-  
-  printNewRound();
+
+  const playRound = (column, row) => {
+    console.log(`Dropping ${getActivePlayer().name}'s token into column ${column}, row ${row}...`)
+    let isValidMove = board.placeToken(column, row, getActivePlayer().token) ? true : false ;
+    const boardWithCellValues = board.getBoard().map((row) => row.map((cell) => cell.getValue()))
+
+    if (winner(boardWithCellValues)) {
+      console.log(`${getActivePlayer().name} wins!`);
+    } else if (isValidMove) {
+      switchPlayerTurn();
+      printNewRound();
+    }    
+  };
 
   return {
     playRound,
@@ -92,4 +162,9 @@ function GameController(
 
 const game = GameController();
 
-
+game.playRound(1,2);
+game.playRound(1,1);
+game.playRound(2,1);
+game.playRound(2,2);
+game.playRound(0,1);
+game.playRound(0,0);
