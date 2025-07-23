@@ -117,28 +117,27 @@ function GameController(
       ]
     ];
 
-    let player1BoardState = JSON.stringify(currentBoard.map((row) => 
-      row.map((cell) => cell === "x" ? 1 : 0)
+    let player1BoardStateStringified = JSON.stringify(currentBoard.map((row) => 
+      row.map((cell) => cell === players[0].token ? 1 : 0)
     ));
-    let player2BoardState = JSON.stringify(currentBoard.map((row) => 
-      row.map((cell) => cell === "o" ? 1 : 0)
+    let player2BoardStateStringified = JSON.stringify(currentBoard.map((row) => 
+      row.map((cell) => cell === players[1].token ? 1 : 0)
     ));
 
     for (let i = 0; i < winningPatterns.length; i++) {
       let winningPatternToCheckStringified = JSON.stringify(winningPatterns[i]);
 
-      if (player1BoardState === winningPatternToCheckStringified) {
+      if (player1BoardStateStringified === winningPatternToCheckStringified) {
         let winner = players[0].name;
         console.log(`The winner is ${winner}!`);
         return winner;
         
-      } else if (player2BoardState === winningPatternToCheckStringified) {
+      } else if (player2BoardStateStringified === winningPatternToCheckStringified) {
         let winner = players[1].name;
         console.log(`The winner is ${winner}!`);
         return winner;
       }
     };
-    // return winner;
   };
 
   const playRound = (column, row) => {
