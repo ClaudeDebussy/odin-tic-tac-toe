@@ -52,6 +52,14 @@ h1, h2, h3, h4, h5, h6 {
 body {
   display: grid;
   height: 100vh;
+
+  --tictactoe-purple: #3b1f2b;
+  --tictactoe-red: #db162f;
+  --tictactoe-light: #dbdfac;
+  --tictactoe-blue: #5f758e;
+  --tictactoe-darkblue: #383961;
+
+  background-color: var(--tictactoe-purple);
 }
 
 .game {
@@ -67,5 +75,24 @@ body {
 .square {
   width: 200px;
   height: 200px;
-  background-color: bisque;
+  background-color: var(--tictactoe-light);
+  color: var(--tictactoe-purple);
+}
+
+._0-0,
+._0-1,
+._0-2,
+._1-0,
+._1-1,
+._1-2 {
+  border-bottom: 10px solid var(--tictactoe-blue);
+}
+
+._0-0,
+._1-0,
+._2-0,
+._0-1,
+._1-1,
+._2-1 {
+  border-right: 10px solid var(--tictactoe-blue);
 }
