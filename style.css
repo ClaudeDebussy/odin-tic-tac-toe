@@ -66,6 +66,60 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   place-self: center;
+
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: var(--tictactoe-light);
+}
+
+.new-game-button {
+  place-self: center;
+  font-weight: 600;
+  margin-bottom: .5em;
+}
+
+.new-game-button:hover {
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--tictactoe-red)
+}
+
+
+.player-names-row {
+  height: 100px;
+
+  background-color: var(--tictactoe-darkblue);
+  font-size: 3em;
+
+  display: grid;
+  grid-template-areas: "player-1-name vs player-2-name";
+  grid-template-columns: 1fr auto 1fr;
+
+  padding-left: .2em;
+  padding-right: .2em;
+}
+
+.vs {
+  font-size: .5em;
+  grid-area: vs;
+  justify-self: center;
+  align-self: center;
+}
+
+.player-name {
+  
+
+}
+
+.player-1-name {
+  grid-area: player-1-name;
+  justify-self: left;
+  align-self: center;
+}
+
+.player-2-name {
+  grid-area: player-2-name;
+  justify-self: right;
+  align-self: center;
 }
 
 .row {
