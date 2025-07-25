@@ -180,6 +180,8 @@ function GameController(
     playRound,
     getActivePlayer,
     renamePlayer,
+    switchPlayerTurn,
+    players,
     board
   };
 }
@@ -232,6 +234,9 @@ function ScreenController() {
     const newGameButton = document.querySelector(".new-game-button");
     newGameButton.addEventListener("click", () => {
       game.board.resetBoard();
+      if (game.getActivePlayer() === game.players[1]) {
+        game.switchPlayerTurn();
+      };
       updateScreen();
     });
 
@@ -287,14 +292,6 @@ function ScreenController() {
   };
 
   clickHandlerBoard();
-
-  // game.playRound(1,2);
-  // game.playRound(1,1);
-  // game.playRound(2,1);
-  // game.playRound(2,2);
-  // game.playRound(0,1);
-  // game.playRound(0,0);
-
 }
 
 ScreenController();

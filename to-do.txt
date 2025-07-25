@@ -1,1 +1,0 @@
-If press New Game during Player 2's turn, active player should switch to Player 1
