@@ -105,11 +105,6 @@ body {
   align-self: center;
 }
 
-.player-name {
-  
-
-}
-
 .player-1-name {
   grid-area: player-1-name;
   justify-self: left;
@@ -149,4 +144,19 @@ body {
 ._1-1,
 ._2-1 {
   border-right: 10px solid var(--tictactoe-blue);
+}
+
+.square {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 15vw;
+  white-space: nowrap;
+}
+
+.player-turn-display {
+  margin-top: .5em;
+  place-self: center;
+  font-weight: 600;
 }

@@ -10,7 +10,7 @@ function Gameboard() {
 
   const getBoard = () => board;
 
-  const placeToken = (column, row, player) => {
+  const placeToken = (row, column, player) => {
     if (board[row][column].getValue() === 0) {
       board[row][column].addToken(player);
       return true;
@@ -47,6 +47,7 @@ function GameController(
   playerOneName = "Player One",
   playerTwoName = "Player Two"
 ) {
+
   const board = Gameboard();
 
   const players = [
@@ -140,9 +141,9 @@ function GameController(
     };
   };
 
-  const playRound = (column, row) => {
+  const playRound = (row, column) => {
     console.log(`Dropping ${getActivePlayer().name}'s token into column ${column}, row ${row}...`)
-    let isValidMove = board.placeToken(column, row, getActivePlayer().token) ? true : false ;
+    let isValidMove = board.placeToken(row, column, getActivePlayer().token) ? true : false ;
     const boardWithCellValues = board.getBoard().map((row) => row.map((cell) => cell.getValue()))
 
     if (winner(boardWithCellValues)) {
@@ -155,15 +156,110 @@ function GameController(
 
   return {
     playRound,
-    getActivePlayer
+    getActivePlayer,
+    board
   };
 }
 
-const game = GameController();
+function ScreenController() {
+  const game = GameController();
 
-game.playRound(1,2);
-game.playRound(1,1);
-game.playRound(2,1);
-game.playRound(2,2);
-game.playRound(0,1);
-game.playRound(0,0);
+  const updateScreen = () => {
+    let squares = document.querySelectorAll(".square");
+    for (const square of squares) {
+      square.textContent = "";
+    }
+    
+    const board = game.board.getBoard();
+    const activePlayer = game.getActivePlayer();
+
+    let playerTurnDisplay = document.querySelector(".player-turn-display");
+    playerTurnDisplay.textContent = `${activePlayer.name}'s turn...`
+
+    const boardWithCellValues = board.map((row) => row.map((cell) => cell.getValue()))
+    console.log("Rendered board:")
+    console.log(boardWithCellValues);
+
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (boardWithCellValues[i][j] === "x") {
+          let squareToChange = document.querySelector(`._${i}-${j}`);
+          squareToChange.textContent = "x";
+        } else if (boardWithCellValues[i][j] === "o") {
+          let squareToChange = document.querySelector(`._${i}-${j}`);
+          squareToChange.textContent = "o";
+        }
+      }
+    }
+
+  };
+  
+  const clickHandlerBoard = () => {
+    const square_00 = document.querySelector("._0-0");
+    const square_01 = document.querySelector("._0-1");
+    const square_02 = document.querySelector("._0-2");
+    const square_10 = document.querySelector("._1-0");
+    const square_11 = document.querySelector("._1-1");
+    const square_12 = document.querySelector("._1-2");
+    const square_20 = document.querySelector("._2-0");
+    const square_21 = document.querySelector("._2-1");
+    const square_22 = document.querySelector("._2-2");
+
+    const newGameButton = document.querySelector(".new-game-button");
+    newGameButton.addEventListener("click", () => {
+      console.log("New Game Button clicked");
+    });
+
+    square_00.addEventListener("click", () => {
+      game.playRound(0,0);
+      updateScreen();
+    });
+    square_01.addEventListener("click", () => {
+      game.playRound(0,1);
+      updateScreen();
+    });
+    square_02.addEventListener("click", () => {
+      game.playRound(0,2);
+      updateScreen();
+    });
+    square_10.addEventListener("click", () => {
+      game.playRound(1,0);
+      updateScreen();
+    });
+    square_11.addEventListener("click", () => {
+      game.playRound(1,1);
+      updateScreen();
+    });
+    square_12.addEventListener("click", () => {
+      game.playRound(1,2);
+      updateScreen();
+    });
+    square_20.addEventListener("click", () => {
+      game.playRound(2,0);
+      updateScreen();
+    });
+    square_21.addEventListener("click", () => {
+      game.playRound(2,1);
+      updateScreen();
+    });
+    square_22.addEventListener("click", () => {
+      game.playRound(2,2);
+      updateScreen();
+    });    
+  };
+
+  clickHandlerBoard();
+
+  // game.playRound(1,2);
+  // game.playRound(1,1);
+  // game.playRound(2,1);
+  // game.playRound(2,2);
+  // game.playRound(0,1);
+  // game.playRound(0,0);
+
+}
+
+ScreenController();
+
+
