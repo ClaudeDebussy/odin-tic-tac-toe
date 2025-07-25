@@ -58,8 +58,8 @@ function Cell() {
 }
 
 function GameController(
-  playerOneName = "Player One",
-  playerTwoName = "Player Two"
+  playerOneName = "Player 1",
+  playerTwoName = "Player 2"
 ) {
 
   const board = Gameboard();
@@ -74,6 +74,14 @@ function GameController(
       token: "o"
     }
   ];
+
+  const renamePlayer = (playerNumber, newPlayerName) => {
+    if (playerNumber === 1) {
+      players[0].name = newPlayerName;
+    } else if (playerNumber === 2) {
+      players[1].name = newPlayerName;
+    };
+  };
 
   let activePlayer = players[0];
 
@@ -171,6 +179,7 @@ function GameController(
   return {
     playRound,
     getActivePlayer,
+    renamePlayer,
     board
   };
 }
@@ -224,6 +233,19 @@ function ScreenController() {
     newGameButton.addEventListener("click", () => {
       game.board.resetBoard();
       updateScreen();
+    });
+
+    const player1Name = document.querySelector(".player-1-name");
+    const player2Name = document.querySelector(".player-2-name");
+    player1Name.addEventListener("click", () => {
+      let newName = prompt("Enter name: ", "Player 1");
+      game.renamePlayer(1, newName);
+      player1Name.textContent = newName;
+    });
+    player2Name.addEventListener("click", () => {
+      let newName = prompt("Enter name: ", "Player 1");
+      game.renamePlayer(2, newName);
+      player1Name.textContent = newName;
     });
 
     square_00.addEventListener("click", () => {
