@@ -250,7 +250,7 @@ function ScreenController() {
     player2Name.addEventListener("click", () => {
       let newName = prompt("Enter name: ", "Player 1");
       game.renamePlayer(2, newName);
-      player1Name.textContent = newName;
+      player2Name.textContent = newName;
     });
 
     square_00.addEventListener("click", () => {

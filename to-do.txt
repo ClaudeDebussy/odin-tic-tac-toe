@@ -1,1 +1,0 @@
-Renaming player 2 causes Player 1 to be renamed
