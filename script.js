@@ -1,12 +1,16 @@
 function Gameboard() {
   board = [];
 
-  for (i = 0; i < 3; i++) {
-    board[i] = [];
-    for (j = 0; j < 3; j++) {
-    board[i].push(Cell());
-    }  
+  const generateNewBoard = () => {
+    for (i = 0; i < 3; i++) {
+      board[i] = [];
+      for (j = 0; j < 3; j++) {
+      board[i].push(Cell());
+      }  
+    }
   }
+
+  generateNewBoard();
 
   const getBoard = () => board;
 
@@ -25,7 +29,12 @@ function Gameboard() {
     console.log(boardWithCellValues);
   }
 
-  return {getBoard, placeToken, printBoard};
+  const resetBoard = () => {
+    board = [];
+    generateNewBoard();
+  }; 
+
+  return {getBoard, placeToken, printBoard, resetBoard};
 }
 
 function Cell() {
@@ -37,9 +46,14 @@ function Cell() {
 
   const getValue = () => value;
 
+  const removeToken = () => {
+    value = 0;
+  }
+
   return {
     addToken,
-    getValue
+    getValue,
+    removeToken
   };
 }
 
@@ -180,19 +194,19 @@ function ScreenController() {
     console.log("Rendered board:")
     console.log(boardWithCellValues);
 
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (boardWithCellValues[i][j] === "x") {
-          let squareToChange = document.querySelector(`._${i}-${j}`);
-          squareToChange.textContent = "x";
-        } else if (boardWithCellValues[i][j] === "o") {
-          let squareToChange = document.querySelector(`._${i}-${j}`);
-          squareToChange.textContent = "o";
+    if (Array.isArray(boardWithCellValues) && Array.isArray(boardWithCellValues[0])) {
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          if (boardWithCellValues[i][j] === "x") {
+            let squareToChange = document.querySelector(`._${i}-${j}`);
+            squareToChange.textContent = "x";
+          } else if (boardWithCellValues[i][j] === "o") {
+            let squareToChange = document.querySelector(`._${i}-${j}`);
+            squareToChange.textContent = "o";
+          }
         }
       }
     }
-
   };
   
   const clickHandlerBoard = () => {
@@ -208,7 +222,8 @@ function ScreenController() {
 
     const newGameButton = document.querySelector(".new-game-button");
     newGameButton.addEventListener("click", () => {
-      console.log("New Game Button clicked");
+      game.board.resetBoard();
+      updateScreen();
     });
 
     square_00.addEventListener("click", () => {
