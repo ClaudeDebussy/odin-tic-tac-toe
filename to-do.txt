@@ -1,1 +1,3 @@
 Add victory display to UI
+Disallow exact same name as opponent
+Disallow empty name
