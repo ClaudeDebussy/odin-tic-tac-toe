@@ -237,6 +237,13 @@ function ScreenController() {
       playerNamesRow.appendChild(player1Name);
       playerNamesRow.appendChild(vs);
       playerNamesRow.appendChild(player2Name);
+
+      // const squares = document.querySelectorAll(".square");
+      // const squareReplacement = document.createElement("div");
+      // squareReplacement.classList.add("square");
+      // squares.forEach(square => {
+      //   square.replaceWith();
+      // });
     
       updateScreen();
     });
