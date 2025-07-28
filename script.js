@@ -78,8 +78,10 @@ function GameController(
   const renamePlayer = (playerNumber, newPlayerName) => {
     if (playerNumber === 1) {
       players[0].name = newPlayerName;
+      return players[0].name;
     } else if (playerNumber === 2) {
       players[1].name = newPlayerName;
+      return players[1].name;
     };
   };
 
@@ -244,13 +246,15 @@ function ScreenController() {
     const player2Name = document.querySelector(".player-2-name");
     player1Name.addEventListener("click", () => {
       let newName = prompt("Enter name: ", "Player 1");
-      game.renamePlayer(1, newName);
-      player1Name.textContent = newName;
+      if (newName.length >= 1 && newName != player2Name.textContent) {
+        player1Name.textContent = game.renamePlayer(1, newName);
+      }
     });
     player2Name.addEventListener("click", () => {
-      let newName = prompt("Enter name: ", "Player 1");
-      game.renamePlayer(2, newName);
-      player2Name.textContent = newName;
+      let newName = prompt("Enter name: ", "Player 2");
+      if (newName.length >= 1 && newName != player1Name.textContent) {
+        player2Name.textContent = game.renamePlayer(2, newName);
+      }
     });
 
     square_00.addEventListener("click", () => {
