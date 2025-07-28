@@ -161,3 +161,12 @@ body {
   font-weight: 600;
   height: 24px;
 }
+
+.winner-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--tictactoe-light);
+  background-color: var(--tictactoe-red);
+  font-weight: 700;
+}

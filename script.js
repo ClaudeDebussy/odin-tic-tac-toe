@@ -2,9 +2,9 @@ function Gameboard() {
   board = [];
 
   const generateNewBoard = () => {
-    for (i = 0; i < 3; i++) {
+    for (let i = 0; i < 3; i++) {
       board[i] = [];
-      for (j = 0; j < 3; j++) {
+      for (let j = 0; j < 3; j++) {
       board[i].push(Cell());
       }  
     }
@@ -87,6 +87,8 @@ function GameController(
 
   let activePlayer = players[0];
 
+  let gameWinner = null;
+
   const switchPlayerTurn = () => {
     activePlayer = activePlayer === players[0] ? players[1] : players[0];
   };
@@ -97,72 +99,33 @@ function GameController(
     console.log(`${getActivePlayer().name}'s turn.`)
   }
 
-  const winner = (board) => {
-    let currentBoard = board;
-    let winningPatterns = [
-      [
-        [1,0,0],
-        [1,0,0],
-        [1,0,0]
-      ],
-      [
-        [1,0,0],
-        [0,1,0],
-        [0,0,1]
-      ],
-      [
-        [0,0,0],
-        [0,0,0],
-        [1,1,1]
-      ],
-      [
-        [0,0,1],
-        [0,1,0],
-        [1,0,0]
-      ],
-      [
-        [1,1,1],
-        [0,0,0],
-        [0,0,0]
-      ],
-      [
-        [0,0,0],
-        [1,1,1],
-        [0,0,0]
-      ],
-      [
-        [0,1,0],
-        [0,1,0],
-        [0,1,0]
-      ],
-      [
-        [0,0,1],
-        [0,0,1],
-        [0,0,1]
-      ]
+  const winner = (valueBoard) => {
+    const linesToCheck = [
+      // Rows
+      [ [0,0], [0,1], [0,2] ],
+      [ [1,0], [1,1], [1,2] ],
+      [ [2,0], [2,1], [2,2] ],
+      // Columns
+      [ [0,0], [1,0], [2,0] ],
+      [ [0,1], [1,1], [2,1] ],
+      [ [0,2], [1,2], [2,2] ],
+      // Diagonals
+      [ [0,0], [1,1], [2,2] ],
+      [ [0,2], [1,1], [2,0] ]
     ];
 
-    let player1BoardStateStringified = JSON.stringify(currentBoard.map((row) => 
-      row.map((cell) => cell === players[0].token ? 1 : 0)
-    ));
-    let player2BoardStateStringified = JSON.stringify(currentBoard.map((row) => 
-      row.map((cell) => cell === players[1].token ? 1 : 0)
-    ));
-
-    for (let i = 0; i < winningPatterns.length; i++) {
-      let winningPatternToCheckStringified = JSON.stringify(winningPatterns[i]);
-
-      if (player1BoardStateStringified === winningPatternToCheckStringified) {
-        let winner = players[0].name;
-        console.log(`The winner is ${winner}!`);
-        return winner;
-        
-      } else if (player2BoardStateStringified === winningPatternToCheckStringified) {
-        let winner = players[1].name;
-        console.log(`The winner is ${winner}!`);
-        return winner;
+    for (const line of linesToCheck) {
+      const [a, b, c] = line;
+      const valA = valueBoard[a[0]][a[1]];
+      const valB = valueBoard[b[0]][b[1]];
+      const valC = valueBoard[c[0]][c[1]];
+      
+      if (valA !== 0 && valA === valB && valB === valC) {
+        return valA === players[0].token ? players[0].name : players[1].name;
       }
-    };
+    }
+
+    return null;
   };
 
   const playRound = (row, column) => {
@@ -171,20 +134,32 @@ function GameController(
     const boardWithCellValues = board.getBoard().map((row) => row.map((cell) => cell.getValue()))
 
     if (winner(boardWithCellValues)) {
-      console.log(`${getActivePlayer().name} wins!`);
-    } else if (isValidMove) {
+      gameWinner = getActivePlayer().name;
+      return;
+    }    
+    
+    if (isValidMove) {
       switchPlayerTurn();
       printNewRound();
     }    
   };
+
+  const resetGame = () => {
+    board.resetBoard();
+    gameWinner = null;
+  };
+
+  const getWinner = () => gameWinner;
 
   return {
     playRound,
     getActivePlayer,
     renamePlayer,
     switchPlayerTurn,
+    resetGame,
     players,
-    board
+    board,
+    getWinner
   };
 }
 
@@ -220,6 +195,14 @@ function ScreenController() {
         }
       }
     }
+
+    const winner = game.getWinner();
+    const playerNamesRow = document.querySelector(".player-names-row");
+
+    if (winner) {    
+      playerNamesRow.textContent = `${winner} wins!`;
+      playerNamesRow.classList.add('winner-display')
+    }
   };
   
   const clickHandlerBoard = () => {
@@ -235,10 +218,26 @@ function ScreenController() {
 
     const newGameButton = document.querySelector(".new-game-button");
     newGameButton.addEventListener("click", () => {
-      game.board.resetBoard();
+      game.resetGame();
       if (game.getActivePlayer() === game.players[1]) {
         game.switchPlayerTurn();
       };
+      const playerNamesRow = document.querySelector(".player-names-row");
+      playerNamesRow.classList.remove('winner-display');
+      playerNamesRow.textContent = "";
+      const player1Name = document.createElement("div");
+      player1Name.classList.add("player-name", "player-1-name");
+      player1Name.textContent = game.players[0].name;
+      const vs = document.createElement("div");
+      vs.classList.add("vs");
+      vs.textContent = "vs";
+      const player2Name = document.createElement("div");
+      player2Name.classList.add("player-name", "player-2-name");
+      player2Name.textContent = game.players[1].name;
+      playerNamesRow.appendChild(player1Name);
+      playerNamesRow.appendChild(vs);
+      playerNamesRow.appendChild(player2Name);
+    
       updateScreen();
     });
 
@@ -294,6 +293,8 @@ function ScreenController() {
       updateScreen();
     });    
   };
+
+  
 
   clickHandlerBoard();
 }
